@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := help
 
 .EXPORT_ALL_VARIABLES:
-UV_FROZEN = true
+# UV_FROZEN left unset so `make test` works before a committed lock exists.
 
 ######################
 # TESTING
