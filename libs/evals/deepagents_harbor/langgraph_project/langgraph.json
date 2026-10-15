@@ -2,6 +2,7 @@
   "dependencies": [
     "./.local_deps/deepagents",
     "./.local_deps/deepagents-code",
+    "./.local_deps/ultragent",
     "langchain[mcp]>=1.4.1,<2.0.0",
     "langchain-anthropic>=1.5.4,<2.0.0",
     "langchain-baseten>=0.2.0,<0.3.0",
@@ -20,6 +21,7 @@
   "graphs": {
     "dcode": "./langgraph_agent.py:make_graph",
     "bare": "./langgraph_agent.py:make_bare_graph",
+    "ultragent": "./langgraph_agent.py:make_ultragent_graph",
     "tau3": "./langgraph_agent.py:make_tau3_graph"
   }
 }

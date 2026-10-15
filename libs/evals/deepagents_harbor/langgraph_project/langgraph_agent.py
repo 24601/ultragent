@@ -451,6 +451,43 @@ def make_bare_graph(config: dict[str, object] | None = None) -> object:
     )
 
 
+def make_ultragent_graph(config: dict[str, object] | None = None) -> object:
+    """Create an empty-config ultragent graph for Harbor A/B baselines.
+
+    Uses `create_ultragent` with default `UltragentConfig()` so all method flags
+    stay off (upstream parity with `create_deep_agent`). Same shell backend and
+    optional web_search wiring as `make_bare_graph`.
+
+    Args:
+        config: LangGraph runtime config. Harbor passes the selected model in
+            `configurable.model` and optional provider kwargs in
+            `configurable.model_kwargs`.
+
+    Returns:
+        A compiled LangGraph graph invokable by Harbor's LangGraph runner.
+
+    Raises:
+        TypeError: If configurable values have unexpected types.
+        ValueError: If no model name is provided.
+        ImportError: If the staged `ultragent` package is unavailable.
+    """
+    # Local import keeps bare/dcode graph loads working when ultragent is not
+    # staged into the Harbor project dependencies.
+    from ultragent import create_ultragent  # noqa: PLC0415
+
+    configurable = _configurable(config)
+    model = _build_model(configurable)
+    backend = LocalShellBackend(
+        root_dir=_workdir(configurable), inherit_env=False, virtual_mode=False
+    )
+    search_tool = _web_search_tool()
+    return create_ultragent(
+        model=model,
+        backend=backend,
+        tools=[search_tool] if search_tool is not None else None,
+    )
+
+
 def _mcp_connections(configurable: dict[str, object]) -> dict[str, Any]:
     """Build FastMCP connections from Harbor-forwarded servers.
 
